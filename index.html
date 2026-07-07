@@ -110,18 +110,37 @@
             }
         }
 
-        map.createPane('pane_Massachusetts_Aerial_Imagery_2025_0');
-        map.getPane('pane_Massachusetts_Aerial_Imagery_2025_0').style.zIndex = 400;
+
+        map.createPane('pane_basemap');
+        map.getPane('pane_basemap').style.zIndex = 200;
+
+        var layer_OpenStreetMap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_basemap',
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19
+        });
+
         var layer_Massachusetts_Aerial_Imagery_2025_0 = L.tileLayer(
             'https://tiles.arcgis.com/tiles/hGdibHYSPO59RG1h/arcgis/rest/services/Massachusetts_Aerial_Imagery_2025/MapServer/tile/{z}/{y}/{x}',
             {
-                pane: 'pane_Massachusetts_Aerial_Imagery_2025_0',
+                pane: 'pane_basemap',
                 attribution: 'MassGIS, USGS',
                 maxNativeZoom: 19,
                 maxZoom: 28
             }
         );
-        map.addLayer(layer_Massachusetts_Aerial_Imagery_2025_0);
+
+        layer_OpenStreetMap.addTo(map);
+
+        L.control.layers(
+            {
+                "OpenStreetMap": layer_OpenStreetMap,
+                "MassGIS Imagery": layer_Massachusetts_Aerial_Imagery_2025_0
+            },
+            null,
+            { position: 'topright', collapsed: true }
+        ).addTo(map);
+
 
         var zoomControl = L.control.zoom({
             position: 'topleft'
